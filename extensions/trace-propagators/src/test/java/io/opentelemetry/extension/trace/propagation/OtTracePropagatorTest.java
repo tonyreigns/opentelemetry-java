@@ -8,6 +8,7 @@ package io.opentelemetry.extension.trace.propagation;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import io.opentelemetry.api.baggage.Baggage;
+import io.opentelemetry.api.baggage.BaggageBuilder;
 import io.opentelemetry.api.trace.Span;
 import io.opentelemetry.api.trace.SpanContext;
 import io.opentelemetry.api.trace.SpanId;
@@ -17,13 +18,18 @@ import io.opentelemetry.api.trace.TraceState;
 import io.opentelemetry.context.Context;
 import io.opentelemetry.context.propagation.TextMapGetter;
 import io.opentelemetry.context.propagation.TextMapSetter;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.stream.Stream;
 import javax.annotation.Nullable;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 class OtTracePropagatorTest {
 
@@ -429,7 +435,7 @@ class OtTracePropagatorTest {
 
   @Test
   void inject_baggageLimit_maxBytes() {
-    Baggage baggage = Baggage.builder().put("k", fillChars('v', 8192)).build();
+    Baggage baggage = Baggage.builder().put("k", nChars('v', 8192)).build();
     Map<String, String> carrier = new LinkedHashMap<>();
     propagator.inject(
         withSpanContext(
@@ -454,7 +460,7 @@ class OtTracePropagatorTest {
       manyEntriesCarrier.put(OtTracePropagator.PREFIX_BAGGAGE_HEADER + "k" + i, "v" + i);
     }
     Map<String, String> bigValueCarrier = carrierWithSpanContext();
-    bigValueCarrier.put(OtTracePropagator.PREFIX_BAGGAGE_HEADER + "k", fillChars('v', 8192));
+    bigValueCarrier.put(OtTracePropagator.PREFIX_BAGGAGE_HEADER + "k", nChars('v', 8192));
     return Stream.of(
         // 65 ot-baggage- keys — only first 64 extracted
         Arguments.of(manyEntriesCarrier, baggageWithEntries(0, 64)),
@@ -462,9 +468,7 @@ class OtTracePropagatorTest {
         Arguments.of(bigValueCarrier, Baggage.empty()));
   }
 
-  /**
-   * Returns a carrier pre-populated with a valid span context (required for baggage extraction).
-   */
+  /** Returns a carrier pre-populated with a valid span context (required for baggage extraction). */
   private static Map<String, String> carrierWithSpanContext() {
     Map<String, String> carrier = new LinkedHashMap<>();
     carrier.put(OtTracePropagator.TRACE_ID_HEADER, TRACE_ID_RIGHT_PART);
@@ -473,10 +477,7 @@ class OtTracePropagatorTest {
     return carrier;
   }
 
-  /**
-   * Builds a {@link Baggage} with entries {@code k{start}=v{start}} through {@code
-   * k{start+count-1}=v{start+count-1}}.
-   */
+  /** Builds a {@link Baggage} with entries {@code k{start}=v{start}} through {@code k{start+count-1}=v{start+count-1}}. */
   private static Baggage baggageWithEntries(int start, int count) {
     BaggageBuilder builder = Baggage.builder();
     for (int i = start; i < start + count; i++) {
@@ -486,7 +487,7 @@ class OtTracePropagatorTest {
   }
 
   /** Returns a string of {@code count} repetitions of {@code c}. */
-  private static String fillChars(char c, int count) {
+  private static String nChars(char c, int count) {
     char[] chars = new char[count];
     Arrays.fill(chars, c);
     return new String(chars);
