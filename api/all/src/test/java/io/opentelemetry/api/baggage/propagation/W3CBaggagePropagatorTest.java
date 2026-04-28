@@ -11,18 +11,27 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import io.opentelemetry.api.baggage.Baggage;
+import io.opentelemetry.api.baggage.BaggageBuilder;
 import io.opentelemetry.api.baggage.BaggageEntryMetadata;
 import io.opentelemetry.context.Context;
 import io.opentelemetry.context.propagation.TextMapGetter;
+<<<<<<< HEAD
 import io.opentelemetry.context.propagation.internal.ExtendedTextMapGetter;
+=======
+import java.util.Arrays;
+>>>>>>> 598913886 (Apply limits to baggage extraction and injection)
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Stream;
 import javax.annotation.Nullable;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 class W3CBaggagePropagatorTest {
 
@@ -644,32 +653,21 @@ class W3CBaggagePropagatorTest {
   @Test
   void extract_limit_maxBytes_exceedsLimit() {
     W3CBaggagePropagator propagator = W3CBaggagePropagator.getInstance();
-    // Single header over 8192 bytes — truncated to the byte limit; the entry within budget is
-    // extracted with a truncated value
-    String header = "k=" + fillChars('v', 8192); // 8194 bytes; truncated to 8192 → k=<8190 v's>
+    // Single header over 8192 bytes — should not be extracted
+    char[] chars = new char[8192];
+    Arrays.fill(chars, 'v');
+    String header = "k=" + new String(chars);
     Context result = propagator.extract(Context.root(), ImmutableMap.of("baggage", header), getter);
-    assertThat(Baggage.fromContext(result).getEntryValue("k")).isEqualTo(fillChars('v', 8190));
-  }
-
-  @Test
-  void extract_limit_maxBytes_partialHeader() {
-    W3CBaggagePropagator propagator = W3CBaggagePropagator.getInstance();
-    // A header where the first entry is complete within the byte budget but the second entry's
-    // key is cut off by the truncation — only the first entry is extracted.
-    // "k1=" (3) + 8186 'v's + "," (1) + "k2=v2" (5) = 8195 bytes;
-    // truncated to 8192 → "k1=<8186 v's>,k2" (k2's "=" is beyond the budget)
-    String header = "k1=" + fillChars('v', 8186) + ",k2=v2";
-    Context result = propagator.extract(Context.root(), ImmutableMap.of("baggage", header), getter);
-    Baggage baggage = Baggage.fromContext(result);
-    assertThat(baggage.getEntryValue("k1")).isEqualTo(fillChars('v', 8186));
-    assertThat(baggage.getEntryValue("k2")).isNull();
+    assertThat(Baggage.fromContext(result)).isEqualTo(Baggage.empty());
   }
 
   @Test
   void extract_limit_maxBytes_acrossMultipleHeaders() {
     W3CBaggagePropagator propagator = W3CBaggagePropagator.getInstance();
     // First header just under 8192 bytes is extracted; second header pushes total over the limit
-    String almostMax = "k=" + fillChars('v', 8189); // "k=vvv..."
+    char[] almostMaxChars = new char[8189];
+    Arrays.fill(almostMaxChars, 'v');
+    String almostMax = "k=" + new String(almostMaxChars); // "k=vvv..."
     String second = "k2=v2";
     Context result =
         propagator.extract(
@@ -696,7 +694,10 @@ class W3CBaggagePropagatorTest {
   void inject_limit_maxBytes() {
     W3CBaggagePropagator propagator = W3CBaggagePropagator.getInstance();
     // One entry whose encoded form alone exceeds the byte limit — should produce empty header
-    Baggage baggage = Baggage.builder().put("k", fillChars('v', 8192)).build();
+    char[] longValueChars = new char[8192];
+    Arrays.fill(longValueChars, 'v');
+    String longValue = new String(longValueChars);
+    Baggage baggage = Baggage.builder().put("k", longValue).build();
     Map<String, String> carrier = new HashMap<>();
     propagator.inject(Context.root().with(baggage), carrier, Map::put);
     assertThat(carrier).doesNotContainKey("baggage");
@@ -706,17 +707,13 @@ class W3CBaggagePropagatorTest {
   void inject_limit_maxBytes_metadata() {
     // Value alone fits easily (k=v is 3 bytes), but k=v;{metadata} exceeds 8192 bytes.
     // Verifies that metadata length is included in the byte limit check.
+    char[] metaChars = new char[8190];
+    Arrays.fill(metaChars, 'x');
     Baggage baggage =
-        Baggage.builder().put("k", "v", BaggageEntryMetadata.create(fillChars('x', 8190))).build();
+        Baggage.builder().put("k", "v", BaggageEntryMetadata.create(new String(metaChars))).build();
     Map<String, String> carrier = new HashMap<>();
     W3CBaggagePropagator.getInstance().inject(Context.root().with(baggage), carrier, Map::put);
     assertThat(carrier).doesNotContainKey("baggage");
-  }
-
-  private static String fillChars(char c, int count) {
-    char[] chars = new char[count];
-    Arrays.fill(chars, c);
-    return new String(chars);
   }
 
   @Test
