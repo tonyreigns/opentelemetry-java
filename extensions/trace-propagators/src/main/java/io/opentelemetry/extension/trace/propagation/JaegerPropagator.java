@@ -243,7 +243,14 @@ public final class JaegerPropagator implements TextMapPropagator {
           if (builder == null) {
             builder = Baggage.builder();
           }
-          builder = parseBaggageHeader(value, builder);
+          int[] counts =
+              parseBaggageHeader(
+                  value,
+                  builder,
+                  MAX_BAGGAGE_ENTRIES - entriesAdded,
+                  MAX_BAGGAGE_BYTES - bytesAdded);
+          entriesAdded += counts[0];
+          bytesAdded += counts[1];
         }
       }
     }
