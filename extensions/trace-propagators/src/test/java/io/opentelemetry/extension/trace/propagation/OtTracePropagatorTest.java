@@ -468,7 +468,9 @@ class OtTracePropagatorTest {
         Arguments.of(bigValueCarrier, Baggage.empty()));
   }
 
-  /** Returns a carrier pre-populated with a valid span context (required for baggage extraction). */
+  /**
+   * Returns a carrier pre-populated with a valid span context (required for baggage extraction).
+   */
   private static Map<String, String> carrierWithSpanContext() {
     Map<String, String> carrier = new LinkedHashMap<>();
     carrier.put(OtTracePropagator.TRACE_ID_HEADER, TRACE_ID_RIGHT_PART);
@@ -477,7 +479,10 @@ class OtTracePropagatorTest {
     return carrier;
   }
 
-  /** Builds a {@link Baggage} with entries {@code k{start}=v{start}} through {@code k{start+count-1}=v{start+count-1}}. */
+  /**
+   * Builds a {@link Baggage} with entries {@code k{start}=v{start}} through {@code
+   * k{start+count-1}=v{start+count-1}}.
+   */
   private static Baggage baggageWithEntries(int start, int count) {
     BaggageBuilder builder = Baggage.builder();
     for (int i = start; i < start + count; i++) {

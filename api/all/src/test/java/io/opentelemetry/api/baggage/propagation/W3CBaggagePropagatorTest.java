@@ -15,11 +15,8 @@ import io.opentelemetry.api.baggage.BaggageBuilder;
 import io.opentelemetry.api.baggage.BaggageEntryMetadata;
 import io.opentelemetry.context.Context;
 import io.opentelemetry.context.propagation.TextMapGetter;
-<<<<<<< HEAD
 import io.opentelemetry.context.propagation.internal.ExtendedTextMapGetter;
-=======
 import java.util.Arrays;
->>>>>>> 598913886 (Apply limits to baggage extraction and injection)
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;

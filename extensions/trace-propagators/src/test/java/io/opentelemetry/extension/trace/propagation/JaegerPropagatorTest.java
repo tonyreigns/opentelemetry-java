@@ -30,7 +30,6 @@ import io.opentelemetry.context.propagation.TextMapGetter;
 import io.opentelemetry.context.propagation.TextMapSetter;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedHashMap;
@@ -515,7 +514,10 @@ class JaegerPropagatorTest {
         Arguments.of(bigValueCarrier, Baggage.empty()));
   }
 
-  /** Builds a {@link Baggage} with entries {@code k{start}=v{start}} through {@code k{start+count-1}=v{start+count-1}}. */
+  /**
+   * Builds a {@link Baggage} with entries {@code k{start}=v{start}} through {@code
+   * k{start+count-1}=v{start+count-1}}.
+   */
   private static Baggage baggageWithEntries(int start, int count) {
     BaggageBuilder builder = Baggage.builder();
     for (int i = start; i < start + count; i++) {
