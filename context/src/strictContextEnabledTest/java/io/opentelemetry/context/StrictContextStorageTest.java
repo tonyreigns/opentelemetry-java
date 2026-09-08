@@ -154,6 +154,9 @@ class StrictContextStorageTest {
         .satisfies(
             t -> assertThat(t.getMessage()).matches("Thread \\[t1\\] opened a scope of .* here:"))
         .hasNoCause();
+    // Keep the scope reference alive until after close() so the JIT cannot treat it as
+    // unreachable and allow the WeakConcurrentMap key to be GC'd before close() drains it.
+    assertThat(scope.get()).isNotNull();
   }
 
   static void assertStackTraceStartsWithMethod(Throwable throwable, String methodName) {

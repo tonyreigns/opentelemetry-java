@@ -1,8 +1,84 @@
-Comparing source compatibility of opentelemetry-api-1.48.0-SNAPSHOT.jar against opentelemetry-api-1.47.0.jar
-***  MODIFIED INTERFACE: PUBLIC ABSTRACT io.opentelemetry.api.logs.LogRecordBuilder  (not serializable)
+Comparing source compatibility of opentelemetry-api-1.48.0.jar against opentelemetry-api-1.65.0.jar
+***! MODIFIED INTERFACE: PUBLIC ABSTRACT io.opentelemetry.api.common.AttributeKey  (not serializable)
 	===  CLASS FILE FORMAT VERSION: 52.0 <- 52.0
-	+++  NEW METHOD: PUBLIC(+) io.opentelemetry.api.logs.LogRecordBuilder setAttribute(java.lang.String, java.lang.String)
-	+++  NEW METHOD: PUBLIC(+) io.opentelemetry.api.logs.LogRecordBuilder setAttribute(java.lang.String, long)
-	+++  NEW METHOD: PUBLIC(+) io.opentelemetry.api.logs.LogRecordBuilder setAttribute(java.lang.String, double)
-	+++  NEW METHOD: PUBLIC(+) io.opentelemetry.api.logs.LogRecordBuilder setAttribute(java.lang.String, boolean)
-	+++  NEW METHOD: PUBLIC(+) io.opentelemetry.api.logs.LogRecordBuilder setAttribute(java.lang.String, int)
+	GENERIC TEMPLATES: === T:java.lang.Object
+	---! REMOVED METHOD: PUBLIC(-) STATIC(-) io.opentelemetry.api.common.AttributeKey<io.opentelemetry.api.common.Value<?>> valueKey(java.lang.String)
+***! MODIFIED INTERFACE: PUBLIC ABSTRACT io.opentelemetry.api.common.AttributesBuilder  (not serializable)
+	===  CLASS FILE FORMAT VERSION: 52.0 <- 52.0
+	---! REMOVED METHOD: PUBLIC(-) io.opentelemetry.api.common.AttributesBuilder put(java.lang.String, io.opentelemetry.api.common.Value<?>)
+***! MODIFIED ENUM: PUBLIC FINAL io.opentelemetry.api.common.AttributeType  (field removed)
+	===  CLASS FILE FORMAT VERSION: 52.0 <- 52.0
+	---! REMOVED FIELD: PUBLIC(-) STATIC(-) FINAL(-) io.opentelemetry.api.common.AttributeType VALUE
+---! REMOVED CLASS: PUBLIC(-) FINAL(-) io.opentelemetry.api.common.Empty  (not serializable)
+	---  CLASS FILE FORMAT VERSION: n.a. <- 52.0
+	---! REMOVED SUPERCLASS: java.lang.Object
+	---! REMOVED METHOD: PUBLIC(-) boolean equals(java.lang.Object)
+	---! REMOVED METHOD: PUBLIC(-) STATIC(-) io.opentelemetry.api.common.Empty getInstance()
+	---! REMOVED METHOD: PUBLIC(-) int hashCode()
+	---! REMOVED METHOD: PUBLIC(-) java.lang.String toString()
+***! MODIFIED INTERFACE: PUBLIC ABSTRACT io.opentelemetry.api.common.Value  (not serializable)
+	===  CLASS FILE FORMAT VERSION: 52.0 <- 52.0
+	GENERIC TEMPLATES: === T:java.lang.Object
+	---! REMOVED METHOD: PUBLIC(-) STATIC(-) io.opentelemetry.api.common.Value<io.opentelemetry.api.common.Empty> empty()
+***! MODIFIED ENUM: PUBLIC FINAL io.opentelemetry.api.common.ValueType  (field removed)
+	===  CLASS FILE FORMAT VERSION: 52.0 <- 52.0
+	---! REMOVED FIELD: PUBLIC(-) STATIC(-) FINAL(-) io.opentelemetry.api.common.ValueType EMPTY
+***! MODIFIED CLASS: PUBLIC FINAL io.opentelemetry.api.GlobalOpenTelemetry  (not serializable)
+	===  CLASS FILE FORMAT VERSION: 52.0 <- 52.0
+	---! REMOVED METHOD: PUBLIC(-) STATIC(-) io.opentelemetry.api.OpenTelemetry getOrNoop()
+	---! REMOVED METHOD: PUBLIC(-) STATIC(-) boolean isSet()
+	---! REMOVED METHOD: PUBLIC(-) STATIC(-) void set(java.util.function.Supplier<io.opentelemetry.api.OpenTelemetry>)
+---! REMOVED CLASS: PUBLIC(-) FINAL(-) io.opentelemetry.api.impl.InstrumentationUtil  (not serializable)
+	---  CLASS FILE FORMAT VERSION: n.a. <- 52.0
+	---! REMOVED SUPERCLASS: java.lang.Object
+	---! REMOVED METHOD: PUBLIC(-) STATIC(-) boolean shouldSuppressInstrumentation(io.opentelemetry.context.Context)
+	---! REMOVED METHOD: PUBLIC(-) STATIC(-) void suppressInstrumentation(java.lang.Runnable)
+***! MODIFIED INTERFACE: PUBLIC ABSTRACT io.opentelemetry.api.logs.Logger  (not serializable)
+	===  CLASS FILE FORMAT VERSION: 52.0 <- 52.0
+	---! REMOVED METHOD: PUBLIC(-) boolean isEnabled(io.opentelemetry.api.logs.Severity, io.opentelemetry.context.Context)
+	---! REMOVED METHOD: PUBLIC(-) boolean isEnabled(io.opentelemetry.api.logs.Severity)
+***! MODIFIED INTERFACE: PUBLIC ABSTRACT io.opentelemetry.api.logs.LogRecordBuilder  (not serializable)
+	===  CLASS FILE FORMAT VERSION: 52.0 <- 52.0
+	---! REMOVED METHOD: PUBLIC(-) io.opentelemetry.api.logs.LogRecordBuilder setAttribute(java.lang.String, io.opentelemetry.api.common.Value<?>)
+	---! REMOVED METHOD: PUBLIC(-) io.opentelemetry.api.logs.LogRecordBuilder setEventName(java.lang.String)
+	---! REMOVED METHOD: PUBLIC(-) io.opentelemetry.api.logs.LogRecordBuilder setException(java.lang.Throwable)
+***! MODIFIED INTERFACE: PUBLIC ABSTRACT io.opentelemetry.api.metrics.DoubleCounter  (not serializable)
+	===  CLASS FILE FORMAT VERSION: 52.0 <- 52.0
+	---! REMOVED METHOD: PUBLIC(-) boolean isEnabled()
+***! MODIFIED INTERFACE: PUBLIC ABSTRACT io.opentelemetry.api.metrics.DoubleGauge  (not serializable)
+	===  CLASS FILE FORMAT VERSION: 52.0 <- 52.0
+	---! REMOVED METHOD: PUBLIC(-) boolean isEnabled()
+***! MODIFIED INTERFACE: PUBLIC ABSTRACT io.opentelemetry.api.metrics.DoubleHistogram  (not serializable)
+	===  CLASS FILE FORMAT VERSION: 52.0 <- 52.0
+	---! REMOVED METHOD: PUBLIC(-) boolean isEnabled()
+***! MODIFIED INTERFACE: PUBLIC ABSTRACT io.opentelemetry.api.metrics.DoubleUpDownCounter  (not serializable)
+	===  CLASS FILE FORMAT VERSION: 52.0 <- 52.0
+	---! REMOVED METHOD: PUBLIC(-) boolean isEnabled()
+***! MODIFIED INTERFACE: PUBLIC ABSTRACT io.opentelemetry.api.metrics.LongCounter  (not serializable)
+	===  CLASS FILE FORMAT VERSION: 52.0 <- 52.0
+	---! REMOVED METHOD: PUBLIC(-) boolean isEnabled()
+***! MODIFIED INTERFACE: PUBLIC ABSTRACT io.opentelemetry.api.metrics.LongGauge  (not serializable)
+	===  CLASS FILE FORMAT VERSION: 52.0 <- 52.0
+	---! REMOVED METHOD: PUBLIC(-) boolean isEnabled()
+***! MODIFIED INTERFACE: PUBLIC ABSTRACT io.opentelemetry.api.metrics.LongHistogram  (not serializable)
+	===  CLASS FILE FORMAT VERSION: 52.0 <- 52.0
+	---! REMOVED METHOD: PUBLIC(-) boolean isEnabled()
+***! MODIFIED INTERFACE: PUBLIC ABSTRACT io.opentelemetry.api.metrics.LongUpDownCounter  (not serializable)
+	===  CLASS FILE FORMAT VERSION: 52.0 <- 52.0
+	---! REMOVED METHOD: PUBLIC(-) boolean isEnabled()
+***! MODIFIED INTERFACE: PUBLIC ABSTRACT io.opentelemetry.api.trace.Span  (not serializable)
+	===  CLASS FILE FORMAT VERSION: 52.0 <- 52.0
+	---! REMOVED METHOD: PUBLIC(-) io.opentelemetry.api.trace.Span setAttribute(java.lang.String, io.opentelemetry.api.common.Value<?>)
+***! MODIFIED INTERFACE: PUBLIC ABSTRACT io.opentelemetry.api.trace.TraceFlags  (not serializable)
+	===  CLASS FILE FORMAT VERSION: 52.0 <- 52.0
+	---! REMOVED METHOD: PUBLIC(-) STATIC(-) io.opentelemetry.api.trace.TraceFlagsBuilder builder()
+	---! REMOVED METHOD: PUBLIC(-) boolean isTraceIdRandom()
+---! REMOVED INTERFACE: PUBLIC(-) ABSTRACT(-) io.opentelemetry.api.trace.TraceFlagsBuilder  (not serializable)
+	---  CLASS FILE FORMAT VERSION: n.a. <- 52.0
+	---! REMOVED SUPERCLASS: java.lang.Object
+	---! REMOVED METHOD: PUBLIC(-) ABSTRACT(-) io.opentelemetry.api.trace.TraceFlags build()
+	---! REMOVED METHOD: PUBLIC(-) ABSTRACT(-) io.opentelemetry.api.trace.TraceFlagsBuilder setRandomTraceId(boolean)
+	---! REMOVED METHOD: PUBLIC(-) ABSTRACT(-) io.opentelemetry.api.trace.TraceFlagsBuilder setSampled(boolean)
+***! MODIFIED INTERFACE: PUBLIC ABSTRACT io.opentelemetry.api.trace.Tracer  (not serializable)
+	===  CLASS FILE FORMAT VERSION: 52.0 <- 52.0
+	---! REMOVED METHOD: PUBLIC(-) boolean isEnabled()

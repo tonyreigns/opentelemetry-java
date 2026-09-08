@@ -11,6 +11,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
@@ -111,10 +112,15 @@ class RetryInterceptorTest {
     succeedOnAttempt(attempts);
 
     // Will backoff 4 times
-    when(random.get((long) (TimeUnit.SECONDS.toNanos(1) * Math.pow(1.6, 0)))).thenReturn(100L);
-    when(random.get((long) (TimeUnit.SECONDS.toNanos(1) * Math.pow(1.6, 1)))).thenReturn(50L);
+    // lenient() avoids PotentialStubbingProblem across parameterized runs with strict stubbing
+    lenient()
+        .when(random.get((long) (TimeUnit.SECONDS.toNanos(1) * Math.pow(1.6, 0))))
+        .thenReturn(100L);
+    lenient()
+        .when(random.get((long) (TimeUnit.SECONDS.toNanos(1) * Math.pow(1.6, 1))))
+        .thenReturn(50L);
     // Capped
-    when(random.get(TimeUnit.SECONDS.toNanos(2))).thenReturn(500L).thenReturn(510L);
+    lenient().when(random.get(TimeUnit.SECONDS.toNanos(2))).thenReturn(500L).thenReturn(510L);
 
     doNothing().when(sleeper).sleep(100);
     doNothing().when(sleeper).sleep(50);
