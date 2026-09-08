@@ -1,2 +1,8 @@
-Comparing source compatibility of opentelemetry-opentracing-shim-1.48.0-SNAPSHOT.jar against opentelemetry-opentracing-shim-1.47.0.jar
-No changes.
+Comparing source compatibility of opentelemetry-opentracing-shim-1.48.0.jar against opentelemetry-opentracing-shim-1.65.0.jar
+===  UNCHANGED CLASS: PUBLIC FINAL io.opentelemetry.opentracingshim.OpenTracingShim  (not serializable)
+	===  CLASS FILE FORMAT VERSION: 52.0 <- 52.0
+	===  UNCHANGED METHOD: PUBLIC STATIC io.opentracing.Tracer createTracerShim(io.opentelemetry.api.OpenTelemetry)
+		---  REMOVED ANNOTATION: java.lang.Deprecated
+	===  UNCHANGED METHOD: PUBLIC STATIC io.opentracing.Tracer createTracerShim(io.opentelemetry.api.trace.TracerProvider, io.opentelemetry.context.propagation.TextMapPropagator, io.opentelemetry.context.propagation.TextMapPropagator)
+		---  REMOVED ANNOTATION: java.lang.Deprecated
+	---  REMOVED ANNOTATION: java.lang.Deprecated

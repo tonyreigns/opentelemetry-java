@@ -151,9 +151,14 @@ public final class W3CBaggagePropagator implements TextMapPropagator {
       return context;
     }
 
+    if (baggageHeader.length() > MAX_BAGGAGE_BYTES) {
+      LOGGER.fine("Baggage header exceeded W3C limits, dropping");
+      return context;
+    }
+
     BaggageBuilder baggageBuilder = Baggage.builder();
     try {
-      extractEntries(baggageHeader, baggageBuilder);
+      extractEntries(baggageHeader, baggageBuilder, MAX_BAGGAGE_ENTRIES);
     } catch (RuntimeException e) {
       return context;
     }

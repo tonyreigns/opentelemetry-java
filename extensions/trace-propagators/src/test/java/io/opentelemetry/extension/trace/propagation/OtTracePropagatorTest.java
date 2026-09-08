@@ -435,7 +435,7 @@ class OtTracePropagatorTest {
 
   @Test
   void inject_baggageLimit_maxBytes() {
-    Baggage baggage = Baggage.builder().put("k", nChars('v', 8192)).build();
+    Baggage baggage = Baggage.builder().put("k", repeatChar('v', 8192)).build();
     Map<String, String> carrier = new LinkedHashMap<>();
     propagator.inject(
         withSpanContext(
@@ -460,7 +460,7 @@ class OtTracePropagatorTest {
       manyEntriesCarrier.put(OtTracePropagator.PREFIX_BAGGAGE_HEADER + "k" + i, "v" + i);
     }
     Map<String, String> bigValueCarrier = carrierWithSpanContext();
-    bigValueCarrier.put(OtTracePropagator.PREFIX_BAGGAGE_HEADER + "k", nChars('v', 8192));
+    bigValueCarrier.put(OtTracePropagator.PREFIX_BAGGAGE_HEADER + "k", repeatChar('v', 8192));
     return Stream.of(
         // 65 ot-baggage- keys — only first 64 extracted
         Arguments.of(manyEntriesCarrier, baggageWithEntries(0, 64)),
@@ -492,7 +492,7 @@ class OtTracePropagatorTest {
   }
 
   /** Returns a string of {@code count} repetitions of {@code c}. */
-  private static String nChars(char c, int count) {
+  private static String repeatChar(char c, int count) {
     char[] chars = new char[count];
     Arrays.fill(chars, c);
     return new String(chars);

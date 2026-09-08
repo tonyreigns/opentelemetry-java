@@ -476,7 +476,7 @@ class JaegerPropagatorTest {
 
   @Test
   void inject_baggageLimit_maxBytes() {
-    Baggage baggage = Baggage.builder().put("k", nChars('v', 8192)).build();
+    Baggage baggage = Baggage.builder().put("k", repeatChar('v', 8192)).build();
     Map<String, String> carrier = new LinkedHashMap<>();
     jaegerPropagator.inject(Context.root().with(baggage), carrier, Map::put);
     assertThat(carrier).doesNotContainKey(BAGGAGE_PREFIX + "k");
@@ -504,7 +504,7 @@ class JaegerPropagatorTest {
     Map<String, String> headerCarrier = new LinkedHashMap<>();
     headerCarrier.put(BAGGAGE_HEADER, jaegerHeader.toString());
     Map<String, String> bigValueCarrier = new LinkedHashMap<>();
-    bigValueCarrier.put(BAGGAGE_PREFIX + "k", nChars('v', 8192));
+    bigValueCarrier.put(BAGGAGE_PREFIX + "k", repeatChar('v', 8192));
     return Stream.of(
         // 65 uberctx- prefix keys — only first 64 extracted
         Arguments.of(prefixCarrier, baggageWithEntries(0, 64)),
@@ -527,7 +527,7 @@ class JaegerPropagatorTest {
   }
 
   /** Returns a string of {@code count} repetitions of {@code c}. */
-  private static String nChars(char c, int count) {
+  private static String repeatChar(char c, int count) {
     char[] chars = new char[count];
     Arrays.fill(chars, c);
     return new String(chars);
